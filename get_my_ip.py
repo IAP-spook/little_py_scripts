@@ -1,6 +1,8 @@
-#! /usr/bin/env python
-# -*-coding:utf-8-*-
+#! /usr/bin/python
+# -*- coding:utf-8 -*-
 # Use function get_ip_address('lo')&get_ip_address('eth0') get the ipaddress
+# write_ip_2file record the ip and time
+# send_ipfile send the file to the server 
 import socket
 import fcntl
 import struct
