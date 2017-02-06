@@ -1,11 +1,11 @@
-#! /usr/bin python
+#! /usr/bin/env python
 # -*-coding:utf-8-*-
 # Use function get_ip_address('lo')&get_ip_address('eth0') get the ipaddress
 import socket
 import fcntl
 import struct
-from time import gmtime, strftime
-import os
+import time
+import subprocess
 
 
 def get_ip_address(ifname):
@@ -13,19 +13,21 @@ def get_ip_address(ifname):
 	return socket.inet_ntoa(fcntl.ioctl(s.fileno(),0x8915,struct.pack('256s',ifname[:15]))[20:24])
 
 
-def write_ip_2file():
-	f = open('ip_address.txt','a')
-	f.write(strftime('%Y%m%d%H%M',gmtime()))
+def write_ip_2file(ip_fn):
+	f = open(ip_fn,'a')
+	f.write(time.strftime('%Y%m%d%H%M',time.localtime()))
 	f.write(' '+get_ip_address('eth0')+'\n')
 
 
-def send_ipfile():
-	os.popen('sshpass -p CO2Monit scp ip_address.txt sense2@sense1.cn:/home/sense2/wyn')
-
-
+def send_ipfile(ip_fn):
+	pwd='CO2Monit '
+	scp_cmd='scp '+ip_fn+' sense2@sense1.cn:/home/sense2/wyn'
+	child1=subprocess.Popen('sshpass -p '+pwd+scp_cmd,shell=True)
+	child1.wait()
 if __name__ =="__main__":
 	#print get_ip_address('lo')
 	#print get_ip_address('eth0')
-	write_ip_2file()
-	send_ipfile()
+	fn='ip_address.txt'
+	write_ip_2file(fn)
+	send_ipfile(fn)
 
