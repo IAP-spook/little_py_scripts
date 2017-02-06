@@ -5,6 +5,7 @@ import socket
 import fcntl
 import struct
 from time import gmtime, strftime
+import os
 
 
 def get_ip_address(ifname):
@@ -18,9 +19,13 @@ def write_ip_2file():
 	f.write(' '+get_ip_address('eth0')+'\n')
 
 
+def send_ipfile():
+	os.popen('sshpass -p CO2Monit scp ip_address.txt sense2@sense1.cn:/home/sense2/wyn')
+
+
 if __name__ =="__main__":
 	#print get_ip_address('lo')
 	#print get_ip_address('eth0')
 	write_ip_2file()
-
+	send_ipfile()
 
